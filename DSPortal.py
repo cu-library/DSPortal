@@ -12,14 +12,14 @@ DSPACE_BASE_URL = "https://carleton-dev.scholaris.ca"
 
 OG_BITSTREAM_PAYLOAD = { 
                 "name": "", 
-                "description": "",
+                "description": None,
                 "type": "bitstream",
                 "bundleName": "ORIGINAL" 
                 }
 
 LICENSE_BITSTREAM_PAYLOAD = {
                 "name": "", 
-                "description": "",
+                "description": None,
                 "type": "license",
                 "bundleName": "LICENSE" 
                 }
