@@ -52,16 +52,10 @@ item_uuid, item_handle = item_creation(session, collection_id, metadata_payload)
 #### 3. Create Bundles for the Item
 
 ```python
-og_bundle_id, license_bundle_id = bundle_creations(session, item_uuid)
+og_bundle_id = bundle_creations(session, item_uuid)
 ```
 
-#### 4. Upload License File
-
-```python
-upload_licenses(session, license_bundle_id, license_dir="/path/to/licenses")
-```
-
-#### 5. Upload Original Files
+#### 4. Upload Original Files
 ```
 file = path/to/files
 upload_files(session, package_data, og_bundle_id, file, OG_BITSTREAM_PAYLOAD)
