@@ -140,47 +140,11 @@ def bundle_creations(session, item_uuid):
         response.raise_for_status()
         og_bundle_id = response.json()["uuid"]
         
-        response = session.safe_request("POST", bundle_endpoint, json={"name": "LICENSE"})
-        response.raise_for_status()
-        license_bundle_id = response.json()["uuid"]
-        
-        return og_bundle_id, license_bundle_id
+        return og_bundle_id
     except requests.exceptions.RequestException as e:
         print(f"Error creating bundles: {e}")
         return None, None
     
-def upload_licenses(session, license_bundle_uuid, license_dir):
-    license_files = [
-        ("license.txt", "Carleton University License"),
-    ]
-
-    license_endpoint = f"{API_BASE}/core/bundles/{license_bundle_uuid}/bitstreams"
-    format_id = 2
-    format_url = f"{API_BASE}/core/bitstreamformats/{format_id}"
-    headers = {"Content-Type": "text/uri-list"}
-
-    for filename, description in license_files:
-        full_path = os.path.join(license_dir, filename)
-        if os.path.isfile(full_path):
-            with open(full_path, "rb") as file:
-                try:
-                    license_upload = {"file": (filename, file, "text/plain")}
-                    response = session.safe_request("POST", license_endpoint, files=license_upload, data=LICENSE_BITSTREAM_PAYLOAD)
-                    
-                    if response:
-                        license_uuid = response.json()["id"]
-                        bitstream_endpoint = f"{API_BASE}/core/bitstreams/{license_uuid}/format"
-
-                        try:
-                            response = session.safe_request("PUT", bitstream_endpoint, headers=headers, data=format_url)
-                            response.raise_for_status()
-                        except requests.exceptions.RequestException as e:
-                            print(f"[{description}] Failed to update MIME type: {e}")
-                except Exception as e:
-                    print(f"[{description}] Failed to upload license: {e}")
-        else:
-            print(f"[{description}] File not found: {full_path}")
-
 def upload_files(session, package_data, og_bundle_uuid, file_path, metadata_payload):
 
     original_endpoint = f"{API_BASE}/core/bundles/{og_bundle_uuid}/bitstreams"
@@ -260,5 +224,6 @@ if __name__ == "__main__":
 
     session = DSpaceSession(API_BASE)
     item_uuid, item_handle = item_creation(session, collection_id, metadata_payload)
-    bundle_creations(session, item_uuid)
-    upload_files(session, file_path=None)
+    og_bundle_id = bundle_creations(session, item_uuid)
+    upload_files(session, file, og_bundle_id, file_path, metadata_payload)
+    
