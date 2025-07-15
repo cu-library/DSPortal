@@ -1,6 +1,6 @@
 ## DSPortal
 
-DSPortal is a Python-based utility that simplifies ingesting content into a [DSpace 7/8](https://wiki.lyrasis.org/display/DSDOC7x/REST+API) repository via the REST API. It handles authentication, CSRF protection, 
+DSPortal is a Python-based utility that simplifies ingesting content into a [DSpace 7/8](https://github.com/DSpace/RestContract/blob/dspace-7_x/README.md) repository via the REST API. It handles authentication, CSRF protection, 
 
 Designed for repeatable and scriptable metadata and file ingestion workflows.
 
