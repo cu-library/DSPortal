@@ -63,13 +63,8 @@ upload_licenses(session, license_bundle_id, license_dir="/path/to/licenses")
 
 #### 5. Upload Original Files
 
-```python
-package_data = PackageData(
-    package_files=["thesis.pdf", "appendix.zip"],
-    ... # Other metadata fields
-)
-
-upload_files(session, package_data, og_bundle_id, "/path/to/files", OG_BITSTREAM_PAYLOAD)
+file = path/to/files
+upload_files(session, package_data, og_bundle_id, file, OG_BITSTREAM_PAYLOAD)
 ```
 
 ---
