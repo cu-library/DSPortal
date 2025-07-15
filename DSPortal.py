@@ -6,6 +6,7 @@ import json
 import traceback
 from requests_toolbelt.multipart import encoder
 
+# API_BASE & Base URL supplied as an argument through click to speicfy if were on Dev or Live
 API_BASE = "https://carleton-dev.scholaris.ca/server/api"
 DSPACE_BASE_URL = "https://carleton-dev.scholaris.ca"
 
@@ -90,18 +91,34 @@ class DSpaceSession(requests.Session):
             response = super().request(method, url, **kwargs)
             response.raise_for_status()
             self.update_csrf_token(response)
-            print(f"Logging error here")
             return response
 
         except requests.exceptions.HTTPError as e:
-            print(f"Logging error here")
-            print(f"Logging error here")
-
+            self.log_error("HTTP error during request", e, response, extra={
+                "method": method,
+                "url": url,
+                "kwargs": kwargs
+            })
+            if self.debug:
+                raise
         except requests.exceptions.RequestException as e:
-            print(f"Logging error here")
-
+            self.log_error("Request exception occurred", e, extra={
+                "method": method,
+                "url": url,
+                "kwargs": kwargs
+            })
+            if self.debug:
+                raise
         except Exception as e:
-            print(f"Logging error here")
+            self.log_error("Unexpected error in request", e, extra={
+                "method": method,
+                "url": url,
+                "kwargs": kwargs
+            })
+            if self.debug:
+                raise
+
+        return None
 
     def safe_request(self, method, url, **kwargs):
         return self.request(method, url, **kwargs)
